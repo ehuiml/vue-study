@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    .sb {
+        width: 20px;
+        height: 20px;
+    }
+</style>
+
+<body>
+    <div id='app'>
+        <div style="background-color: red;" @click="bg">
+            <!-- <button @click="sm"></button> -->
+            <button @click.stop="sm" class="sb"></button>
+            <!-- <a href="http://www.baidu.com" @click="a">69</a> -->
+            <a href="http://www.baidu.com" @click.prevent.stop="a">69</a>
+            <a href="http://www.baidu.com" @click.prevent.stop.once="a">79</a>
+        </div>
+    </div>
+</body>
+<script src='./vue.js'></script>
+<script>
+    var hw = new Vue({
+        el: '#app',
+        data: {},
+        methods: {
+            bg() {
+                console.log('点击大盒子');
+            },
+            sm() {
+                console.log('点击小盒子');
+            },
+            a() {
+                console.log('点击a链接');
+            }
+        }
+    })
+</script>
+
+</html>

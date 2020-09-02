@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id='app'>
+        <input type="text" v-model="num1">
+        <select v-model="sep">
+            <option value="+">+</option>
+            <option value="-">-</option>
+            <option value="*">*</option>
+            <option value="/">/</option>
+        </select>
+        <input type="text" v-model="num2" @keyup.enter="res">=
+        <!-- <input type="text" v-model="msg" placeholder="计算结果"> -->
+        <!-- <input type="text" v-bind:value="msg" placeholder="计算结果"> -->
+        <input type="text" :value="msg" placeholder="计算结果">
+    </div>
+</body>
+<script src='./vue.js'></script>
+<script>
+    var hw = new Vue({
+        el: '#app',
+        data: {
+            num1: '',
+            sep: '+',
+            num2: '',
+            msg: ''
+        },
+        methods: {
+            res() {
+                if (this.sep === "+") {
+                    this.msg = parseFloat(this.num1) + parseFloat(this.num2)
+                }
+                if (this.sep === "-") {
+                    this.msg = parseFloat(this.num1) + parseFloat(this.num2)
+                }
+                if (this.sep === "*") {
+                    this.msg = parseFloat(this.num1) * parseFloat(this.num2)
+                }
+                if (this.sep === "/") {
+                    this.msg = parseFloat(this.num1) / parseFloat(this.num2)
+                }
+
+            }
+        }
+    })
+</script>
+
+</html>
