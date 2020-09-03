@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id='app'>
+        <input type="text" v-model="imp">{{imp}}
+        <input type="text" v-model.number="imp1">{{imp1+200}}
+        <input type="text" v-model.trim="imp2">{{imp2.length}}
+        <input type="text" v-model.lazy="imp3">{{imp3}}
+        <hr>
+        <input type="radio" name="" id="" v-model='sex' value="m">男
+        <input type="radio" name="" id="" v-model='sex' value="f">女{{sex}}
+        <hr>
+        <input type="checkbox" v-model="ck">{{ck}}
+        <hr>
+        <input type="checkbox" v-model="jk" value="sb">1
+        <input type="checkbox" v-model="jk" value="nt">2
+        <input type="checkbox" v-model="jk" value="rz">3{{jk}}
+        <hr>
+        <select v-model="lan" name="" id="">
+            <option value="1">汉语</option>
+            <option value="2">日语</option>
+            <option value="3">英语</option>
+            <option value="4">韩语</option>
+        </select>{{lan}}
+        <select v-model="lan3" name="" id="">
+            <option>汉语</option>
+            <option>日语</option>
+            <option>英语</option>
+            <option>韩语</option>
+        </select>{{lan3}}
+        <select v-model="lan1" name="" id="" multiple>
+            <option value="1">汉语</option>
+            <option value="2">日语</option>
+            <option value="3">英语</option>
+            <option value="4">韩语</option>
+        </select>{{lan1}}
+        <hr>
+        <input type="text" v-naotan>{{msgs}}
+    </div>
+
+</body>
+<script src='./vue.js'></script>
+<script>
+    Vue.directive("color", {
+        bind(el, binding) {
+            el.style.color = binding.value.color;
+            el.style.background = binding.value.bgcolor;
+        }
+    })
+    // Vue.directive("naotan", {
+    //     inserted(el) {
+    //         el.focus();
+    //     }
+    // })
+    var hw = new Vue({
+        el: '#app',
+        data: {
+            imp: "6969",
+            imp1: "6969",
+            imp2: "6969",
+            imp3: "6969",
+            sex: '0',
+            ck: false,
+            jk: ["sb"],
+            lan: 1,
+            lan1: [],
+            lan3: '',
+            msgs: 66
+        },
+        methods: {}
+    })
+</script>
+
+</html>

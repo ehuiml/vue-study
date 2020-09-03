@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- 定义一个自定义指令, v-gettime, 使用当前指令的标签渲染出 多久之前  如果当前的时间戳减去之前的时间戳 < 10000, 返回'刚刚'  > 10000 '1小时' -->
+
+    <div id='app'>
+        <div v-gettime="obj">{{obj.lesstime}}小时前发布</div>
+    </div>
+    <script src='./vue.js'></script>
+    <script>
+        Vue.directive('gettime', {
+            inserted: function (el, binding) {
+                binding.value.lesstime = Math.floor((binding.value.nowtime - binding.value.time) / 1000 / 60 / 60)
+                // console.log(binding);
+            }
+        })
+        // console.log(date);
+
+        var hw = new Vue({
+            el: '#app',
+            data: {
+                obj: {
+                    time: 1599130665722,
+                    nowtime: +new Date,
+                    lesstime: ''
+                }
+            },
+            methods: {},
+        })
+    </script>
+</body>
+
+</html>
