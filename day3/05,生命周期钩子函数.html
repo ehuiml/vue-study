@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">
+    <p>{{msg}}</p>
+    <button @click="msg='肖卅是个好爸爸'">切换</button>
+  </div>
+  <script src="./vue.js"></script>
+  <script>
+    // 某些钩子函数在创建实例的时候就会自动执行
+    new Vue({
+      el: "#app",
+      data: {
+        msg: "肖卅是个性张扬的人",
+        list: []
+      },
+      methods: {
+        fn() {
+          console.log("fn方法被调用了");
+        },
+      },
+      // 创建vue实例的时候,有一些生命周期函数(钩子函数)
+      // 这是第一个钩子函数,实例创建前,在这个钩子函数中,data中的数据和methods中的方法还未被初始化完毕,不可以访问到data中的数据methods方法的
+      beforeCreate() {
+        //   console.log(this.msg); //undefined
+        //   this.fn(); // 报错
+      },
+      // 第二个钩子函数,创建后, 这个钩子访问的时候,data中的数据和methods中的方法,已经被初始化完毕,最早访问data中的数据methods中的方法,需要在created这个中访问
+      created() {
+        // console.log(this.msg);
+        // this.fn();
+      },
+      // 挂载前  主要关注的是dom树., beforeMount 说明页面中插值表达式的数据还未被真正的替换
+      beforeMount() {
+        // console.log(document.querySelector('p').innerHTML);
+      },
+      // mounted 挂载后, 说明data中的数据已经被替换到了页面视图中
+      mounted() {
+        // console.log(document.querySelector("p").innerHTML);
+      },
+      // 更新前 这个钩子函数执行的时候,已经将data中的数据做了更新,但是视图中的数据还没有更新
+      beforeUpdate() {
+        //    console.log(this.msg);
+        //    console.log(document.querySelector("p").innerHTML);
+      },
+      // 更新后  这个钩子函数执行的时候data中的数据和视图已经完全更新完毕
+      updated() {
+        // console.log(this.msg);
+        // console.log(document.querySelector("p").innerHTML);
+      },
+      // 销毁前 实例销毁前data中的数据方法都是可正常访问的
+      beforeDestroy() { },
+      // 销毁后 实例不存在
+      dedtroyed() { },
+    });
+  </script>
+</body>
+
+</html>

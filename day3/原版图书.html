@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Document</title>
+  <style type="text/css">
+    .grid {
+      margin: auto;
+      width: 530px;
+      text-align: center;
+    }
+
+    .grid table {
+      border-top: 1px solid #c2d89a;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .grid th,
+    td {
+      padding: 10;
+      border: 1px dashed #f3dcab;
+      height: 35px;
+      line-height: 35px;
+    }
+
+    .grid th {
+      background-color: #f3dcab;
+    }
+
+    .grid .book {
+      padding-bottom: 10px;
+      padding-top: 5px;
+      background-color: #f3dcab;
+    }
+
+    .grid .total {
+      height: 30px;
+      line-height: 30px;
+      background-color: #f3dcab;
+      border-top: 1px solid #c2d89a;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="grid">
+      <div>
+        <h1>图书管理</h1>
+        <div class="book">
+          <div>
+            <label for="id"> 编号： </label>
+            <input type="text" id="id" v-model="id" disabled />
+            <label for="name"> 名称： </label>
+            <input type="text" id="name" autocomplete="off" v-model="name" v-focus />
+            <button @click="handler" :disabled="isSubmit">提交</button>
+          </div>
+        </div>
+      </div>
+      <div class="total">
+        <span>图书总数：</span><span>{{books.length}}</span>计算属性:
+        {{count}}
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>编号</th>
+            <th>名称</th>
+            <th>时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in books" :key="item.id">
+            <td>{{item.id}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.date | dateformat('yyyy-MM-DD hh:mm:ss')}}</td>
+            <td>
+              <a href="#" @click.prevent="toEdit(item.id)">修改</a> |
+              <a href="#" @click.prevent="delbook(item.id)">删除</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+  <script>
+    // 自定义指令 获取焦点
+    Vue.directive("focus", {
+      inserted(el) {
+        el.focus();
+      },
+    });
+    // 时间过滤器
+    Vue.filter("dateformat", function (val, param) {
+      // console.log(val); val参数1是要过滤的数据  参数2param是用户传递的参数
+      const date = new Date(val);
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      const h = date.getHours();
+      const m = date.getMinutes();
+      const s = date.getSeconds();
+      // console.log(day);
+      if (param == "yyyy") {
+        return `${year}`;
+      } else if (param == "yyyy-MM-DD") {
+        return `${year}-${month}-${day}`;
+      } else if (param == "yyyy-MM-DD hh:mm:ss") {
+        return `${year}-${month}-${day} ${h}:${m}:${s}`;
+      }
+    });
+    new Vue({
+      el: "#app",
+      data: {
+        //id
+        id: "",
+        // 图书的name
+        name: "",
+        //   控制提交按钮的开关
+        isSubmit: false,
+        //   设置添加或编辑的开关
+        isEdit: false,
+        books: [],
+      },
+      // 计算属性
+      computed: {
+        count() {
+          return this.books.length;
+        },
+      },
+      // 侦听器
+      watch: {
+        name(value) {
+          //如果用户输入的name值和数据的name字段一致,禁用,反之就开启
+          // some方法返回值是一个布尔值,不可以在循环中去进行赋值操作
+          // this.books.some((item) => {
+          //     // return item.name == value
+          //     //   if (item.name == value) {
+          //     //     //禁用
+          //     //     this.isSubmit = true;
+          //     //   } else {
+          //     //     this.isSubmit = false;
+          //     //   }
+          //     });
+          //   },
+          // const res = this.books.some((item) => item.name == value);
+          // this.isSubmit = res 
+          this.isSubmit = this.books.some((item) => item.name == value)
+          // console.log(res);
+        },
+      },
+      // 钩子函数
+      created() {
+        // 发送请求 获取到数组数据
+        const data = [
+          { id: 1, name: "三国演义", date: 1599288690549 },
+          { id: 2, name: "水浒传", date: 1599288690549 },
+          { id: 3, name: "西游记", date: 1599288690549 },
+          { id: 4, name: "红楼梦", date: 1599288690549 },
+        ];
+        this.books = data;
+      },
+      methods: {
+        // 添加图书方法
+        handler() {
+          //   非空校验
+          if (!this.name) return;
+          // 添加的业务逻辑
+          if (this.isEdit == false) {
+            this.books.push({
+              //   id: this.books.length + 1,
+              id: this.books.length
+                ? this.books[this.books.length - 1].id + 1
+                : 1,
+              name: this.name,
+              date: +new Date(),
+            });
+          } else {
+            // 修改的业务逻辑  id
+            // 当我们点击修改按钮之后,data中id和name已经赋值了
+            //   console.log(this.id);
+            //   console.log(this.name);
+            this.books.some((item) => {
+              if (item.id == this.id) {
+                item.name = this.name;
+                // 节省循环次数 some方法 遇到true后会终止循环
+                return true;
+              }
+            });
+            //   修改结束之后将开关设置为 false
+            this.isEdit = false;
+          }
+          // 提交完毕将表单情空
+          this.id = this.name = "";
+        },
+        //   删除图书的方法
+        delbook(id) {
+          // 将删除图书的id接收  数组的截取 或者 数组的过滤
+          console.log(id);
+          // 方式一: 找到索引截取数组元素
+          // 拿着id找到对应删除元素的索引, findIndex 返回要找的数组元素的索引值
+          const index = this.books.findIndex((item) => item.id == id);
+          //  调用截取数组的方法
+          this.books.splice(index, 1);
+          // 方式二: 数组的过滤 filter
+          // this.books = this.books.filter((item) => item.id != id);
+        },
+        //   修改图书
+        toEdit(id) {
+          // 点击修改按钮 将isEdit 设置为true
+          this.isEdit = true;
+          // 接收到用户传递的id,数组中找到id一样的元素,将id值和name值渲染在页面上
+          // const i = this.books.findIndex((item) => item.id == id);
+          // console.log(this.books[i]);
+          // this.id = this.books[i].id;
+          // this.name = this.books[i].name;
+          const res = this.books.filter((item) => item.id == id);
+          // console.log(res);
+          this.id = res[0].id;
+          this.name = res[0].name;
+        },
+      },
+
+    });
+  </script>
+</body>
+
+</html>

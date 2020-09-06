@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id='app'>
+        <input type="text" name="" id="" v-model="fm">
+        <button @click="add">添加</button>
+        <button @click="del">删除</button>
+        <button @click="change">改变</button>
+        <div v-for='(item,index) in list' :key="index">{{item}}</div>
+    </div>
+</body>
+<script src='./vue.js'></script>
+<script>
+    var hw = new Vue({
+        el: '#app',
+        data: {
+            list: ["sb", "nt", "rz"],
+            fm: ''
+        },
+        methods: {
+            add() {
+                this.list.push(this.fm)
+            },
+            del() {
+                this.list.pop()
+            },
+            change() {
+                this.list = this.list.slice(0, 2)
+            }
+        },
+        watch: {},
+        filters: {},
+        computed: {}
+    })
+</script>
+
+</html>

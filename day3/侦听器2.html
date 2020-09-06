@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id='app'>
+        <input type="text" name="" id="" v-model.lazy="msg">
+        <span>{{tip}}</span>
+    </div>
+</body>
+<script src='./vue.js'></script>
+<script>
+    var hw = new Vue({
+        el: '#app',
+        data: {
+            msg: '',
+            tip: ''
+        },
+        methods: {
+            ckname(name) {
+                setTimeout(() => {
+                    // if (this.msg == 'admin') { this.tip = "重复" }
+                    if (name == 'admin') { this.tip = "重复" }
+                    else { this.tip = "验证成功" }
+                    // console.log(name)
+                    // console.log(this.name);
+                    // console.log(this);
+                }, 2000)
+            }
+        },
+        watch: {
+            msg(val) {
+                this.ckname(val),
+                    this.tip = "验证中"
+            }
+        },
+        filters: {},
+        computed: {}
+    })
+</script>
+
+</html>

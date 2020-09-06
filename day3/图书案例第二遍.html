@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Document</title>
+  <style type="text/css">
+    .grid {
+      margin: auto;
+      width: 530px;
+      text-align: center;
+    }
+
+    .grid table {
+      border-top: 1px solid #C2D89A;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .grid th,
+    td {
+      padding: 10;
+      border: 1px dashed #F3DCAB;
+      height: 35px;
+      line-height: 35px;
+    }
+
+    .grid th {
+      background-color: #F3DCAB;
+    }
+
+    .grid .book {
+      padding-bottom: 10px;
+      padding-top: 5px;
+      background-color: #F3DCAB;
+    }
+
+    .grid .total {
+      height: 30px;
+      line-height: 30px;
+      background-color: #F3DCAB;
+      border-top: 1px solid #C2D89A;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="grid">
+      <div>
+        <h1>图书管理</h1>
+        <div class="book">
+          <div>
+            <label for="id"> 编号： </label> <input type="text" id="id" v-model="id" :disabled="flag" />
+            <label for="name"> 名称： </label>
+            <input type="text" id="name" v-model="name" /> <button @click="add">提交</button>
+          </div>
+        </div>
+      </div>
+      <div class="total"><span>图书总数：</span> <span>4</span></div>
+      <table>
+        <thead>
+          <tr>
+            <th>编号</th>
+            <th>名称</th>
+            <th>时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in books" :key="item.id">
+            <td>{{item.id}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.date | dateformat("yyyy-MM-DD hh:mm:ss")}}</td>
+            <td><a href="" @click.prevent="change(item.id)">修改</a> | <a href="" @click.prevent="del(item.id)">删除</a>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script src="./vue.js"></script>
+  <script>
+    Vue.filter("dateformat", function (val, param) {
+      // console.log(val); val参数1是要过滤的数据  参数2param是用户传递的参数
+      const date = new Date(val);
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      const h = date.getHours();
+      const m = date.getMinutes();
+      const s = date.getSeconds();
+      // console.log(day);
+      if (param == "yyyy") {
+        return `${year}`;
+      } else if (param == "yyyy-MM-DD") {
+        return `${year}-${month}-${day}`;
+      } else if (param == "yyyy-MM-DD hh:mm:ss") {
+        return `${year}-${month}-${day} ${h}:${m}:${s}`;
+      }
+      // } return `${year}-${month}-${day} ${h}:${m}:${s}`
+    });
+    new Vue({
+      el: "#app",
+      data: {
+        name: '',
+        id: '',
+        books: [],
+        flag: true,
+        isEdit: false,
+      },
+      created() {
+        const data = [
+          { id: 1, name: '三国演义', date: +new Date },
+          { id: 2, name: '水浒传', date: +new Date },
+          { id: 3, name: '西游记', date: +new Date },
+          { id: 4, name: '红楼梦', date: +new Date }
+        ]
+        this.books = data
+      },
+
+      methods: {
+        add(id) {
+          if (!this.name) return;
+          // 添加的业务逻辑
+          if (this.isEdit == false) {
+            this.books.push({
+              //   id: this.books.length + 1,
+              id: this.books.length
+                ? this.books[this.books.length - 1].id + 1
+                : 1,
+              name: this.name,
+              date: +new Date(),
+            });
+
+          } else {
+            // 修改的业务逻辑  id
+            // 当我们点击修改按钮之后,data中id和name已经赋值了
+            //   console.log(this.id);
+            //   console.log(this.name);
+            this.books.some((item) => {
+              if (item.id == this.id) {
+                item.name = this.name;
+                // 节省循环次数 some方法 遇到true后会终止循环
+                return true;
+              }
+            });
+            //   修改结束之后将开关设置为 false
+            this.isEdit = false;
+          }
+          // 提交完毕将表单情空
+          this.id = this.name = "";
+        },
+        del(id) {
+          const index = this.books.findIndex((item) => item.id == id);
+          //  调用截取数组的方法
+          this.books.splice(index, 1);
+        },
+        change(id) {
+          this.isEdit = true;
+          // 接收到用户传递的id,数组中找到id一样的元素,将id值和name值渲染在页面上
+          // const i = this.books.findIndex((item) => item.id == id);
+          // console.log(this.books[i]);
+          // this.id = this.books[i].id;
+          // this.name = this.books[i].name;
+          const res = this.books.filter((item) => item.id == id);
+          // console.log(res);
+          this.id = res[0].id;
+          this.name = res[0].name;
+        }
+      },
+
+    });
+  </script>
+</body>
+
+</html>

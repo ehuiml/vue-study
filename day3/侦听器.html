@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id='app'>
+        <span>用户名</span>
+        <input type="text" name="" id="" v-model.lazy="uname">
+        <span>{{tip}}</span>
+    </div>
+</body>
+<script src='./vue.js'></script>
+<script>
+    var hw = new Vue({
+        el: '#app',
+        data: {
+            uname: '',
+            tip: ''
+        },
+        methods: {
+            checkname(uname) {
+                var that = this
+                setTimeout(function () {
+                    if (that.uname == 'admin') { that.tip = "用户名重复" }
+                    else { that.tip = "验证成功" }
+                }, 2000)
+            }
+        },
+        watch: {
+            uname(val) {
+                this.checkname(val),
+                    this.tip = "验证中"
+            }
+        }
+    })
+</script>
+
+</html>

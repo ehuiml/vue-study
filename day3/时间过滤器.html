@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id='app'>
+        <div>{{time | times}}</div>
+    </div>
+</body>
+<script src='./vue.js'></script>
+<script>
+    var hw = new Vue({
+        el: '#app',
+        data: {
+            time: new Date,
+            // time: ''
+        },
+        methods: {},
+        watch: {},
+        filters: {
+            times: function (val) {
+                // const date = new Date
+                // console.log(date);
+                // console.log(val);
+                const year = val.getFullYear()
+                const month = val.getMonth() + 1
+                const day = val.getDate()
+                // const year = date.getFullYear()
+                // const month = date.getMonth() + 1
+                // const day = date.getDate()
+                return `${year}-${month}-${day}`
+            }
+        },
+        computed: {}
+    })
+</script>
+
+</html>
