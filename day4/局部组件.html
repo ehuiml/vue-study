@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<!-- <style>
+        div{
+            background-color: skyblue;
+        }
+    </style> -->
+
+<body>
+    <div id='app'>
+        <coma></coma>
+    </div>
+</body>
+<script src='./vue.js'></script>
+<script>
+    const coma = {
+        template: "<div>组件A</div>",
+        // data() {
+        //     return {}
+        // }
+    }
+    const comb = {
+        template: "<div>组件B</div>",
+        // data() {
+        //     return {}
+        // }
+    }
+    var hw = new Vue({
+        el: '#app',
+        data: {},
+        methods: {},
+        watch: {},
+        filters: {},
+        computed: {},
+        components: {
+            coma: coma,
+            comb: comb,
+        }
+    })
+</script>
+
+</html>

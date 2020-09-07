@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id='app'>
+        <p>文字</p>
+        <com-a @handle='phandler($event)'></com-a>
+    </div>
+</body>
+<script src='./vue.js'></script>
+<script>
+    Vue.component('com-a', {
+        template: `<div>子组件coma<button @click="$emit('handle',{c1:smsm,c2:sbsb})">按钮</button></div>`,
+        data() {
+            return {
+                smsm: 'green',
+                sbsb: 'skyblue'
+            }
+        }
+    })
+    var hw = new Vue({
+        el: '#app',
+        data: {},
+        methods: {
+            phandler(param) {
+                document.querySelector('p').style.color = param.c1
+                document.querySelector('p').style.background = param.c2
+            }
+        },
+        watch: {},
+        filters: {},
+        computed: {}
+    })
+</script>
+
+</html>

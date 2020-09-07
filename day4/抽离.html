@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id='app'>
+        <jt-component></jt-component>
+        <jt-component></jt-component>
+        <jt-component></jt-component>
+        <jt-component></jt-component>
+    </div>
+</body>
+<script src='./vue.js'></script>
+<script>
+
+    Vue.component("jt-component", {
+        template: `<strong @click="handel">{{sb}}</strong>`,
+        data() {
+            return { sb: "sbsb", }
+
+
+        },
+        methods: {
+            handel() {
+                this.sb = "naotan"
+            }
+        }
+    })
+    var hw = new Vue({
+        el: '#app',
+        data: {},
+        methods: {},
+        watch: {},
+        filters: {},
+        computed: {}
+    })
+</script>
+
+</html>
