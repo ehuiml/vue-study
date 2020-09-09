@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id='app'>
+        <button @click.prevent="del">删除</button>
+        <button @click.prevent="add">添加</button>
+        <button @click.prevent="edit">修改</button>
+        <li v-for="item in list" :key="item.id">{{item.name}}</li>
+
+    </div>
+</body>
+ 
+<script src="./vue.js"></script>
+    
+<script src="./axios.js"></script>
+<script>
+    axios.defaults.baseURL = "http://localhost:3000/";
+    axios.defaults.headers.common['Authorization'] = '111';
+    axios.interceptors.response.use(function (res) { return res.data })
+    var hw = new Vue({
+        el: '#app',
+        created: async function () {
+            const res = await axios.get('fruits')
+            console.log(res);
+        },
+        // created() {
+        //     axios.get('fruits').then((res) => {
+        //         this.list = res.data
+        //     });
+        // },
+        data: {
+            list: []
+        },
+        methods: {
+            del() {
+                axios.delete('fruits/3').then(res => { console.log(res.data); })
+            },
+            add() {
+                axios.post('fruits', { name: "猕猴桃" }).then(res => { console.log(res.data); })
+            },
+            edit() {
+                axios.put('fruits/4', { name: "芒果" }).then(res => { console.log(res.data); })
+            }
+        },
+        watch: {},
+        filters: {},
+        computed: {}
+
+
+    })
+</script>
+
+</html>

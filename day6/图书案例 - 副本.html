@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Document</title>
+  <style type="text/css">
+    .grid {
+      margin: auto;
+      width: 530px;
+      text-align: center;
+    }
+
+    .grid table {
+      border-top: 1px solid #c2d89a;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .grid th,
+    td {
+      padding: 10;
+      border: 1px dashed #f3dcab;
+      height: 35px;
+      line-height: 35px;
+    }
+
+    .grid th {
+      background-color: #f3dcab;
+    }
+
+    .grid .book {
+      padding-bottom: 10px;
+      padding-top: 5px;
+      background-color: #f3dcab;
+    }
+
+    .grid .total {
+      height: 30px;
+      line-height: 30px;
+      background-color: #f3dcab;
+      border-top: 1px solid #c2d89a;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="grid">
+      <div>
+        <h1>图书管理</h1>
+        <div class="book">
+          <div>
+            <label for="id"> 编号： </label>
+            <input type="text" id="id" v-model="id" disabled />
+            <label for="name"> 名称： </label>
+            <input type="text" id="name" autocomplete="off" v-model="name" />
+            <button @click="handler">提交</button>
+          </div>
+        </div>
+      </div>
+      <div class="total"><span>图书总数：</span> <span>4</span></div>
+      <table>
+        <thead>
+          <tr>
+            <th>编号</th>
+            <th>名称</th>
+            <th>时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in books" :key="item.id">
+            <td>{{item.id}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.date | format('yyyy-MM-dd hh:mm:ss')}}</td>
+            <td>
+              <a href="#" @click.prevent="toEdit(item.id)">修改</a> |
+              <a href="#" @click.prevent="delbook(item.id)">删除</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script src="./vue.js"></script>
+  <script src="./axios.js"></script>
+  <script>
+    axios.defaults.baseURL = 'http://localhost:3000/';
+    axios.defaults.headers.common['Authorization'] = '111';
+    axios.interceptors.response.use(function (res) { return res.data })
+    Vue.directive("focus", { inserted(el) { el.focus() } })
+    Vue.filter('format', function (value, arg) {
+      function dateFormat(date, format) {
+        if (typeof date === "string") {
+          var mts = date.match(/(\/Date\((\d+)\)\/)/);
+          if (mts && mts.length >= 3) {
+            date = parseInt(mts[2]);
+          }
+        }
+        date = new Date(date);
+        if (!date || date.toUTCString() == "Invalid Date") {
+          return "";
+        }
+        var map = {
+          "M": date.getMonth() + 1, //月份 
+          "d": date.getDate(), //日 
+          "h": date.getHours(), //小时 
+          "m": date.getMinutes(), //分 
+          "s": date.getSeconds(), //秒 
+          "q": Math.floor((date.getMonth() + 3) / 3), //季度 
+          "S": date.getMilliseconds() //毫秒 
+        };
+
+        format = format.replace(/([yMdhmsqS])+/g, function (all, t) {
+          var v = map[t];
+          if (v !== undefined) {
+            if (all.length > 1) {
+              v = '0' + v;
+              v = v.substr(v.length - 2);
+            }
+            return v;
+          } else if (t === 'y') {
+            return (date.getFullYear() + '').substr(4 - all.length);
+          }
+          return all;
+        });
+        return format;
+      }
+      return dateFormat(value, arg);
+    })
+    new Vue({
+      el: "#app",
+      data: {
+        //id
+        id: "",
+        // 图书的name
+        name: "",
+        date: new Date,
+        //   设置添加或编辑的开关
+        isEdit: false,
+        books: [
+
+        ],
+        isSubmit: false
+      },
+      watch: {
+        name(value) {
+          this.isSubmit = this.books.some((item) => item.name == value)
+        },
+      },
+      computed: {
+        count() {
+          return this.books.length
+        }
+      },
+      // created() {
+      //   // const data = [
+      //   //   this.books = await axios.get('books')
+
+      //   ];
+      // this.books = data
+
+      // },
+      created: async function () {
+        // this.books = await axios.get("books")
+        this.getBooks()
+      },
+      methods: {
+        async getBooks() {
+          this.books = await axios.get("books")
+        },
+        // 添加图书方法
+        async handler() {
+          //   非空校验
+          if (!this.name) return;
+          // 添加的业务逻辑
+          if (this.isEdit == false) {
+            // this.books.push({
+            //   //   id: this.books.length + 1,
+            //   id: this.books.length
+            //     ? this.books[this.books.length - 1].id + 1
+            //     : 1,
+            //   name: this.name,
+            //   date: +new Date(),
+            const res = await axios.post('books', { name: this.name })
+            if (res.status == 200) {
+              this.getBooks()
+            }
+
+          } else {
+            // 修改的业务逻辑  id
+            // 当我们点击修改按钮之后,data中id和name已经赋值了
+            //   console.log(this.id);
+            //   console.log(this.name);
+            const res = await axios.put('books/' + this.id, { name: this.name })
+            if (res.status == 200) {
+              this.getBooks()
+            }
+            // this.books.some((item) => {
+            //   if (item.id == this.id) {
+            //     item.name = this.name;
+            //     // 节省循环次数 some方法 遇到true后会终止循环
+            //     return true;
+            //   }
+            // });
+            //   修改结束之后将开关设置为 false
+            this.isEdit = false;
+          }
+          // 提交完毕将表单情空
+          this.id = this.name = "";
+        },
+        //   删除图书的方法
+        async delbook(id) {
+          // 将删除图书的id接收  数组的截取 或者 数组的过滤
+          console.log(id);
+          // 方式一: 找到索引截取数组元素
+          // 拿着id找到对应删除元素的索引, findIndex 返回要找的数组元素的索引值
+          const res = await axios.delete('books/' + id)
+          if (res.status == 200) {
+            this.getBooks()
+          }
+          // const index = this.books.findIndex((item) => item.id == id);
+          //  调用截取数组的方法
+          // this.books.splice(index, 1);
+          // 方式二: 数组的过滤 filter
+          // this.books = this.books.filter((item) => item.id != id);
+        },
+        //   修改图书
+        async toEdit(id) {
+          this.isEdit = true;
+          const res = await axios.get('books/' + id)
+          // const res = this.books.filter((item) => item.id == id);
+          // console.log(res);
+          this.id = res.id;
+          this.name = res.name;
+        }
+        // 点击修改按钮 将isEdit 设置为true
+
+        // 接收到用户传递的id,数组中找到id一样的元素,将id值和name值渲染在页面上
+        // const i = this.books.findIndex((item) => item.id == id);
+        // console.log(this.books[i]);
+        // this.id = this.books[i].id;
+        // this.name = this.books[i].name;
+
+
+      },
+    });
+  </script>
+</body>
+
+</html>

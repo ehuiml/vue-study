@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id='app'></div>
+</body>
+<!-- <script src="./axios.js"></script> -->
+<script src="./jquery.js"></script>
+<!-- <script src='./vue.js'></script> -->
+<script>
+    // axios.defaults.baseURL = 'http://localhost:3000/';
+    // axios.defaults.headers.common['Authorization'] = '111';
+    // axios.interceptors.response.use(function (res) { return res.data })
+    function request(url) {
+        return new Promise((reslove, reject) => {
+            $.ajax({
+                // url: "http://localhost:3000/data",
+                url: url,
+                success(data) {
+                    reslove(data)
+                },
+                error(err) {
+                    reject(err)
+                }
+            })
+        })
+    }
+    async function fn() {
+        const res1 = await request("http://localhost:3000/data")
+        const res2 = await request("http://localhost:3000/data1")
+        const res3 = await request("http://localhost:3000/data2")
+        console.log(res1);
+        console.log(res2);
+        console.log(res3);
+    }
+    fn()
+    // var hw = new Vue({
+    //     el: '#app',
+    //     data: {},
+    //     methods: {},
+    //     watch: {},
+    //     filters: {},
+    //     computed: {}
+    // })
+</script>
+
+</html>

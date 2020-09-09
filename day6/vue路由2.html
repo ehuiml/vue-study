@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+
+</style>
+
+<body>
+    <div id='app'>
+        <router-link to='/music'>音乐</router-link>
+        <router-link to='/movie'>电影</router-link>
+        <router-link to='/news'>新闻</router-link>
+        <router-view></router-view>
+    </div>
+</body>
+<script src='./vue.js'></script>
+<script src="./vue-router.js"></script>
+<script>
+    const music = {
+        template: `<div>
+            <div>音乐列表</div>
+        <router-link to='/music/ssr'>ssr</router-link>
+        <router-link to='/music/ssx'>ssx</router-link>
+        <router-link to='/music/ssz'>ssz</router-link>
+        <router-view />
+        </div>
+        `
+
+
+
+
+    }
+    const movie = { template: `<div>电影列表</div>` }
+    const news = { template: `<div>新闻列表</div>` }
+    const ssr = { template: `<div>11音乐</div>` }
+    const ssx = { template: `<div>22音乐</div>` }
+    const ssz = { template: `<div>33音乐</div>` }
+    const router = new VueRouter({
+        routes: [
+            {
+                path: '/music', component: music, children: [
+                    { path: '/music/ssr', component: ssr },
+                    { path: '/music/ssx', component: ssx },
+                    { path: '/music/ssz', component: ssz },
+                ]
+            },
+            { path: '/movie', component: movie },
+            { path: '/news', component: news }
+        ]
+    })
+    // 自己加一行router
+    var hw = new Vue({
+        el: '#app',
+        data: {},
+        methods: {},
+        watch: {},
+        filters: {},
+        computed: {},
+        router
+    })
+
+</script>
+
+</html>
